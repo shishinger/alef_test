@@ -2,17 +2,21 @@
 import { ref } from "vue";
 
 const isTouched = ref(false);
+const likes = ref(200);
 </script>
 <template>
   <li class="suggestion__card" @touchend="isTouched = !isTouched">
-    <div class="suggestion__hint" :class="{ open: isTouched }">
+    <div class="suggestion__hint" :class="{ js_open: isTouched }">
       <p>Узнай, что на мне</p>
-      <div class="suggestion__likes">200</div>
+      <div class="suggestion__likes" :aria-label="likes + ' лайков'">
+        {{ likes }}
+      </div>
     </div>
     <a
       href="javascript:void(0)"
       class="full-link"
       title="Предлагаемый товар"
+      aria-label="Предлагаемый товар"
       @focusin="isTouched = !isTouched"
       @focusout="isTouched = !isTouched"
     ></a>
@@ -22,10 +26,6 @@ const isTouched = ref(false);
 .suggestion {
   &__card {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     color: var(--bg);
@@ -37,13 +37,10 @@ const isTouched = ref(false);
         background-image: url("../assets/suggest#{$i}.jpg");
       }
     }
-    & .full-link:focus {
-      &__hint {
-        opacity: 1;
-      }
-    }
     @media (max-width: 1100px) {
-      aspect-ratio: 1 / 1;
+      @supports (aspect-ratio: 1 / 1) {
+        aspect-ratio: 1 / 1;
+      }
       &:nth-of-type(1) {
         grid-row: auto;
         grid-column: span 2;
@@ -59,11 +56,14 @@ const isTouched = ref(false);
     width: 100%;
     height: 100%;
     background-color: rgb(51, 51, 51, 0.7);
-    transition: 0.4s ease;
-    &::before {
+    transition: opacity 0.4s ease;
+    &::before,
+    &::after {
       content: "";
       width: 10%;
       height: 12%;
+    }
+    &::before {
       margin-bottom: var(--xs);
       background-image: url("../assets/stack.svg#bag_suggest");
     }
@@ -72,8 +72,6 @@ const isTouched = ref(false);
       position: absolute;
       top: 5%;
       right: 0;
-      width: 10%;
-      height: 12%;
       background-image: url("../assets/stack.svg#full_screen");
     }
   }
@@ -82,16 +80,15 @@ const isTouched = ref(false);
     bottom: 0;
     display: flex;
     align-items: center;
-    column-gap: var(--xs);
     transform: translateY(-100%);
+    @supports (column-gap: 10px) {
+      column-gap: var(--xs);
+    }
     &::before {
       content: "";
       width: var(--midi);
       height: var(--midi);
       background-image: url("../assets/stack.svg#favorite_full");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
     }
   }
 }
@@ -102,7 +99,14 @@ const isTouched = ref(false);
     }
   }
 }
-.open {
+.js_open {
   opacity: 1;
+}
+.full-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

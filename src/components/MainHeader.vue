@@ -34,15 +34,17 @@ function getImg(img) {
             height="16"
             alt=""
             aria-hidden="true"
+            focusable="false"
           />
           <span class="hidden">{{ btnLabel }}</span>
         </button>
       </li>
       <li class="service__item menu">
         <button
-          :class="{ cross: isOpen }"
+          :class="{ js_cross: isOpen }"
           class="service__btn menu__btn"
           title="Меню"
+          aria-label="Меню"
           @click="isOpen = !isOpen"
         >
           <div class="menu__item" v-for="n in 3" :key="n"></div>
@@ -50,15 +52,17 @@ function getImg(img) {
         </button>
       </li>
     </ul>
-    <nav :class="{ open: isOpen }" class="nav">
+    <nav :class="{ js_open: isOpen }" class="nav">
       <ul class="nav__list">
         <li class="nav__item" v-for="menuItem in menu" :key="menuItem">
-          <a href="javascript:void(0)" tabindex="-1">{{ menuItem }}</a>
+          <a href="javascript:void(0)" :tabindex="isOpen ? 0 : -1">
+            {{ menuItem }}
+          </a>
         </li>
       </ul>
     </nav>
     <div
-      :class="{ open: isOpen }"
+      :class="{ js_open: isOpen }"
       class="overlay"
       @click="isOpen = !isOpen"
     ></div>
@@ -75,12 +79,12 @@ function getImg(img) {
   align-items: baseline;
   justify-content: space-between;
   padding: var(--xs) var(--centering);
-  box-shadow: var(--bottom-line);
+  box-shadow: var(--bottom-line) var(--shadow_dark);
   background-color: var(--bg);
-  transition: transform 0.2s ease;
+  transition: transform 0.5s ease;
   z-index: 2;
   @media (max-width: 1390px) {
-    --centering: var(--big);
+    padding: var(--big);
   }
 }
 .logo {
@@ -92,26 +96,33 @@ function getImg(img) {
 }
 .service {
   display: flex;
-  align-items: center;
-  column-gap: var(--xl);
-  border: 1px solid transparent;
+  align-items: flex-start;
+  @supports (column-gap: 16px) {
+    column-gap: var(--xl);
+  }
   &__item {
     position: relative;
-    transition: opacity 0.2s ease-in-out;
-    &::before {
+    transition: opacity 0.2s ease;
+    &:not(.menu):before {
       content: "";
       position: absolute;
-      inset: 95% 0% 0 0%;
+      inset: 95% 0 0 0;
       background-color: var(--text);
       transform: scaleX(0);
       transform-origin: right;
       transition: transform 0.4s ease-in-out;
       z-index: -1;
     }
-    &:active {
+    @media (hover: hover) {
+      &:hover::before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+    &:active,
+    &:active::before {
       opacity: 0.5;
     }
-    &:hover::before,
     &:active::before {
       transform: scaleX(1);
       transform-origin: left;
@@ -119,7 +130,6 @@ function getImg(img) {
   }
   &__btn {
     padding: 4px;
-    color: var(--text);
   }
 }
 .menu {
@@ -133,15 +143,16 @@ function getImg(img) {
     width: var(--midi);
     height: 1px;
     background-color: var(--text);
-    display: flex;
-    transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    .cross &:nth-of-type(1) {
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+      opacity 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    .js_cross &:nth-of-type(1) {
       transform: rotate(45deg) translateX(1px);
     }
-    .cross &:nth-of-type(2) {
+    .js_cross &:nth-of-type(2) {
+      transform: translateX(100%);
       opacity: 0;
     }
-    .cross &:nth-of-type(3) {
+    .js_cross &:nth-of-type(3) {
       transform: rotate(135deg) translateX(-1px);
     }
   }
@@ -149,18 +160,17 @@ function getImg(img) {
     display: none;
   }
 }
-.cross {
+.js_cross {
   row-gap: 0;
-  z-index: 2;
 }
 .nav {
   position: absolute;
   top: 0;
   left: 0;
-  padding: calc(var(--2xl) * 2) var(--2xl) var(--large);
+  padding: calc(var(--2xl) * 3) var(--2xl) calc(var(--xl) * 2);
   width: 100%;
   background-color: var(--bg);
-  font-size: var(-small);
+  font-size: var(--small);
   line-height: var(--lh_bg);
   letter-spacing: var(--ls);
   text-transform: uppercase;
@@ -172,10 +182,35 @@ function getImg(img) {
     flex-direction: column;
     row-gap: var(--2xl);
   }
-}
-
-.out {
-  transform: translateY(-100%);
+  &__item {
+    position: relative;
+    width: max-content;
+    transition: opacity 0.2s ease-in-out;
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 95% 0 0 0;
+      background-color: var(--text);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s ease-in-out;
+      z-index: -1;
+    }
+    @media (hover: hover) {
+      &:hover::before {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+    &:active,
+    &:active::before {
+      opacity: 0.5;
+    }
+    &:active::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
 }
 .overlay {
   position: fixed;
@@ -188,7 +223,7 @@ function getImg(img) {
   background-color: transparent;
   pointer-events: all;
 }
-.open {
+.js_open {
   transform: translateY(0);
 }
 </style>

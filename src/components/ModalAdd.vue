@@ -28,7 +28,7 @@ defineProps(["title", "amount", "place"]);
 .bold {
   font-weight: 600;
 }
-.fade {
+.js_fade {
   animation: fade 5s ease;
 }
 @keyframes fade {

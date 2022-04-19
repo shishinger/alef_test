@@ -8,7 +8,7 @@ function getImg(img) {
 </script>
 <template>
   <div class="gallery">
-    <img :src="bigImg" class="gallery__main-img" alt="" />
+    <img :src="bigImg" class="gallery__main-img" alt="Изображение товара" />
     <ul class="gallery__list">
       <li
         class="gallery__item"
@@ -32,22 +32,28 @@ function getImg(img) {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: calc(var(--2xl) * 2);
     max-width: 10%;
     row-gap: var(--xs);
     z-index: 1;
   }
-  &__main-img {
-    aspect-ratio: 1 / 1.28;
+  @supports (aspect-ratio: 1 / 1.28) {
+    &__main-img {
+      aspect-ratio: 1 / 1.28;
+    }
+  }
+  @supports (aspect-ratio: 1 / 1.28) {
+    &__item {
+      aspect-ratio: 0.769 / 1;
+    }
   }
   &__item {
     position: relative;
-    aspect-ratio: 0.769 / 1;
+    transition: transform 0.2s ease;
     cursor: pointer;
+    background-repeat: no-repeat;
+    background-size: cover;
     @for $i from 1 through 5 {
       &:nth-child(#{$i}) {
-        background-repeat: no-repeat;
-        background-size: cover;
         background-image: url("../assets/thumb#{$i}.jpg");
       }
     }
@@ -61,15 +67,15 @@ function getImg(img) {
       height: 100%;
       background-color: var(--bg);
       opacity: 0.3;
-      transition: 0.2s ease;
+      transition: opacity 0.2s ease;
     }
-    &:hover {
-      &::before {
-        opacity: 0;
+    @media (hover: hover) {
+      &:hover {
+        transform: scale(1.1);
+        &::before {
+          opacity: 0;
+        }
       }
-    }
-    &_curent::before {
-      opacity: 0;
     }
   }
 }

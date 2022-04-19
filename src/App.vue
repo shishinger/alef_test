@@ -20,8 +20,9 @@ document.addEventListener("scroll", function () {
 </script>
 
 <template>
-  <main-header :class="{ out: isOut }" />
+  <main-header :class="{ js_out: isOut }" />
   <main class="main">
+    <h1 class="hidden">Тестовое задание Alef</h1>
     <card-item />
     <suggest-block />
   </main>
@@ -32,35 +33,45 @@ document.addEventListener("scroll", function () {
 @import "./assets/reset.scss";
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
 :root {
-  // colors
   --text: #333333;
   --bg: #f2f2f2;
   --accent_dark: #828282;
   --accent_light: #c4c4c4;
-  --bottom-line: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  // sizes
+  --error: #e0514a;
+  --blue: rgba(51, 51, 255, 0.8);
+  --shadow_dark: rgba(0, 0, 0, 0.1);
+  --shadow_blue: rgba(51, 51, 255, 0.26);
   --centering: calc((100% - 1385px) / 2);
-  --xs: 0.7em; //10px
-  --small: 0.857em; //12px
-  --normal: 1em; //14px
-  --midi: 1.143em; //16px
-  --big: 1.428em; //20px
-  --large: 1.571em; //22px
-  --xl: 1.71em; //24px
-  --2xl: 2.357em; //33px
-  // line height
+  --xs: 0.7em;
+  --small: 0.857em;
+  --normal: 1em;
+  --midi: 1.143em;
+  --big: 1.428em;
+  --large: 1.571em;
+  --xl: 1.71em;
+  --2xl: 2.357em;
   --lh_nm: 1;
   --lh_bg: 1.33;
   --lh_lg: 1.43;
-  // letter spasing
   --ls: 0.04em;
-  // media queries
-  --big-screen: 1390px;
+  --bottom-line: 0px 2px 4px 0;
+  --box-shadow_hover: 2px 2px 10px 0;
+  --box-shadow_active: 2px 2px 0 0;
+  --shadow_animation: box-shadow 0.25s ease-in-out;
+  --sine: cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 :focus {
-  outline: 1px solid #a5c9ff;
+  outline: 1px solid var(--shadow_blue);
+  outline-offset: 2px;
 }
-body {
+:focus:not(:focus-visible) {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid #a5c9ff;
+  outline-offset: 2px;
+}
+html {
   font-size: 14px;
   background-color: var(--bg);
   color: var(--text);
@@ -75,23 +86,7 @@ body {
 section {
   overflow-x: hidden;
 }
-.full-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  border: 0;
-  padding: 0;
-  white-space: nowrap;
-  clip-path: inset(100%);
-  clip: rect(0 0 0 0);
-  overflow: hidden;
+.js_out {
+  transform: translateY(-100%);
 }
 </style>

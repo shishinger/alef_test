@@ -34,13 +34,20 @@ function addTo(where) {
         <p class="article">Арт. 02765/46</p>
         <a href="javascript:void(0)" class="reviews">
           <h3 class="reviews__title">Отзывы</h3>
-          <div class="stars" :title="'Рейтинг: ' + rating">
+          <div
+            class="stars"
+            role="img"
+            :aria-label="'Рейтинг: ' + rating"
+            :alt="'Рейтинг: ' + rating"
+          >
             <img
               src="../assets/stack.svg#star_full"
               v-for="fullStar in rating"
               :key="fullStar"
               width="10"
               height="10"
+              aria-hidden="true"
+              focusable="false"
               alt=""
             />
             <img
@@ -49,16 +56,21 @@ function addTo(where) {
               :key="empryStar"
               width="10"
               height="10"
+              aria-hidden="true"
+              focusable="false"
               alt=""
             />
           </div>
           <span class="reviews__amount">14 отзывов</span>
         </a>
       </div>
-
-      <a class="price">
-        <div class="price__actual">800 &#8381;</div>
-        <div class="price__old">1 500 &#8381;</div>
+      <a href="javascript:void(0)" class="price">
+        <div class="price__actual" title="Новая цена" aria-label="Новая цена">
+          800 &#8381;
+        </div>
+        <div class="price__old" title="Cтарая цена" aria-label="Cтарая цена">
+          1 500 &#8381;
+        </div>
         <div class="sale">
           <div class="sale__item" v-for="sale in sales" :key="sale">
             {{ sale }}
@@ -69,7 +81,9 @@ function addTo(where) {
         <div class="size__input">
           <select name="size" id="size" class="size__input">
             <option disabled>Выбрать размер</option>
-            <option v-for="size in sizes" :key="size">{{ size }}</option>
+            <option v-for="size in sizes" :key="size" :value="size">
+              {{ size }}
+            </option>
           </select>
           <label for="size" class="hidden">Выбрать размер</label>
         </div>
@@ -77,7 +91,9 @@ function addTo(where) {
       </div>
       <div class="add">
         <div class="add__counter">
-          <button class="add__plus" @click="amount++">+</button>
+          <button class="add__plus" @click="amount++">
+            + <span class="hidden">Увеличить количество на 1 единицу</span>
+          </button>
           <input
             type="number"
             name="amount"
@@ -86,36 +102,46 @@ function addTo(where) {
             v-model.number="amount"
             min="1"
           />
-          <label for="amount" class="hidden">Количество товара</label>
-          <button class="add__minus" @click="amount--">–</button>
+          <label for="amount" class="hidden"
+            >Количество товара {{ amount }} едениц</label
+          >
+          <button class="add__minus" @click="amount--">
+            – <span class="hidden">Уменьшить количество на 1 единицу</span>
+          </button>
         </div>
-        <button class="to-cart" @click="addTo('cart')">
+        <button class="to-cart" @click="addTo('cart')" :disabled="amount < 1">
           Добавить в корзину
         </button>
-        <button class="to-fav" @click="addTo('fav')">
+        <button class="to-fav" @click="addTo('fav')" :disabled="amount < 1">
           <img
             src="../assets/stack.svg#favorite"
             width="16"
             height="15"
             alt=""
+            aria-hidden="true"
+            focusable="false"
           />
           <span class="hidden">Добавить в избранное</span>
         </button>
         <a href="javascript:void(0)" class="link">Купить в 1 клик</a>
       </div>
-      <div class="card__desc">
-        <a href="javascript:void(0)" class="link desc">Описание товара</a>
-        <a href="javascript:void(0)" class="link shipping"
-          >Доставка и возврат</a
-        >
-        <a href="javascript:void(0)" class="link payment">Способы оплаты</a>
-      </div>
+      <ul class="card__desc">
+        <li class="desc">
+          <a href="javascript:void(0)" class="link">Описание товара</a>
+        </li>
+        <li class="shipping">
+          <a href="javascript:void(0)" class="link">Доставка и возврат</a>
+        </li>
+        <li class="payment">
+          <a href="javascript:void(0)" class="link">Способы оплаты</a>
+        </li>
+      </ul>
     </div>
     <a href="javascript:void(0)" class="link more">Посмотреть все стили</a>
   </section>
   <modal-add
     v-if="addedToCart"
-    :class="{ fade: addedToCart }"
+    :class="{ js_fade: addedToCart }"
     :title="title"
     :amount="amount"
     :place="place"
@@ -125,21 +151,19 @@ function addTo(where) {
 <style lang="scss" scoped>
 .card {
   display: grid;
+  -ms-grid-columns: repeat(2, 1fr);
   grid-template-columns: repeat(2, 1fr);
-  font-size: var(--normal);
-  &__info {
-    padding: var(--xl) var(--2xl);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+  @supports (column-gap: 10px) {
+    column-gap: var(--normal);
   }
   &__about {
-    margin-bottom: calc(var(--2xl) * 1.4);
+    padding: var(--xl) var(--big);
   }
   &__desc {
     display: flex;
     flex-direction: column;
-    row-gap: var(--xs);
+    row-gap: var(--small);
+    padding: var(--big);
   }
   @media (max-width: 750px) {
     display: flex;
@@ -147,43 +171,45 @@ function addTo(where) {
   }
 }
 .title {
-  margin-bottom: var(--xs);
+  margin-bottom: calc(var(--xs) / 3);
   font-weight: 600;
   font-size: 18px;
-  line-height: var(--lh_nm);
+  line-height: var(--lh_bg);
 }
 .article {
   margin-bottom: var(--large);
   font-size: var(--small);
-  line-height: var(--lh_nm);
+  line-height: var(--lh_bg);
   letter-spacing: var(--ls);
   color: var(--accent_dark);
 }
 .reviews {
   display: flex;
   align-items: baseline;
-  position: relative;
-  width: max-content;
   &__title {
-    margin-right: var(--normal);
+    margin-right: var(--small);
     font-size: var(--normal);
     font-weight: 400;
-    line-height: var(--lh_bg);
+    line-height: var(--lh_lg);
     letter-spacing: var(--ls);
   }
   &__amount {
     position: relative;
+    line-height: var(--lh_lg);
+    letter-spacing: var(--ls);
     &::after {
       content: url("../assets/stack.svg#arrow");
       position: absolute;
       width: var(--normal);
       height: var(--normal);
-      transform: translateX(100%);
-      transition: transform 0.2s ease-in-out;
+      transform: translate(3px, 3px);
+      transition: transform 0.2s ease;
     }
   }
-  &:hover &__amount::after {
-    transform: translateX(100%) scale(1.5);
+  @media (hover: hover) {
+    &:hover &__amount::after {
+      transform: translate(6px, 3px) scale(1.2);
+    }
   }
   &:active {
     color: var(--accent_dark);
@@ -191,17 +217,20 @@ function addTo(where) {
 }
 .stars {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-right: calc(var(--xs) / 2);
+  @supports (column-gap: 2px) {
+    column-gap: 2px;
+  }
 }
 .price {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   flex-wrap: wrap;
-  column-gap: var(--normal);
-  margin-bottom: var(--2xl);
+  padding: var(--big);
   letter-spacing: var(--ls);
+  @supports (column-gap: 14px) {
+    column-gap: var(--normal);
+  }
   &__actual {
     font-weight: 700;
     font-size: var(--xl);
@@ -209,21 +238,22 @@ function addTo(where) {
   }
   &__old {
     position: relative;
-    font-size: var(--normal);
-    line-height: var(--lh_bg);
+    line-height: var(--lh_lg);
     text-decoration: line-through;
-    color: var(--text);
+    color: var(--accent_dark);
     &::after {
       content: url("../assets/stack.svg#arrow");
       position: absolute;
       width: var(--normal);
       height: var(--normal);
-      transform: translateX(100%);
-      transition: transform 0.2s ease-in-out;
+      transform: translate(100%, 1px);
+      transition: transform 0.2s ease;
     }
   }
-  &:hover &__old::after {
-    transform: translateX(100%) scale(1.5);
+  @media (hover: hover) {
+    &:hover &__old::after {
+      transform: translate(140%, 1px) scale(1.2);
+    }
   }
   &:active {
     color: var(--accent_dark);
@@ -231,15 +261,16 @@ function addTo(where) {
 }
 .sale {
   display: flex;
-  column-gap: calc(var(--xs) / 2);
   flex: 0 0 100%;
   margin-top: var(--small);
+  @supports (column-gap: 10px) {
+    column-gap: var(--xs);
+  }
   &__item {
     width: max-content;
-    padding: calc(var(--xs) / 2) var(--xs);
+    padding: calc(var(--xs) / 2) calc(var(--normal) / 2);
     font-size: var(--small);
     line-height: var(--lh_bg);
-    letter-spacing: var(--ls);
     border: 1px solid var(--text);
     text-transform: lowercase;
   }
@@ -248,15 +279,21 @@ function addTo(where) {
   display: flex;
   flex-direction: column;
   row-gap: var(--small);
-  margin-bottom: calc(var(--2xl) * 1.3);
+  padding: var(--midi) var(--big);
   &__input {
     position: relative;
     width: 100%;
     max-width: calc(var(--2xl) * 10);
+    transition: var(--shadow_animation);
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: var(--box-shadow_active) var(--shadow_blue);
+      }
+    }
     select {
+      -webkit-appearance: none;
       appearance: none;
-      width: 100%;
-      padding: var(--xs);
+      padding: var(--xs) var(--xs);
       font-size: var(--normal);
       line-height: var(--lh_bg);
       letter-spacing: var(--ls);
@@ -265,7 +302,6 @@ function addTo(where) {
     &::after {
       content: "";
       position: absolute;
-      display: inline-block;
       width: var(--normal);
       height: var(--normal);
       top: 50%;
@@ -277,48 +313,57 @@ function addTo(where) {
 }
 .link {
   width: max-content;
-  font-size: var(--normal);
   line-height: var(--lh_bg);
   text-decoration: underline;
   letter-spacing: var(--ls);
-  transition: text-decoration-color 0.2s ease;
-  &:hover {
-    text-decoration-color: #993366;
+  transition: color 0.1s var(--sine), text-decoration-color 0.3s var(--sine);
+  @media (hover: hover) {
+    &:hover {
+      text-decoration-color: transparent;
+    }
   }
   &:active {
-    color: #993366;
+    color: var(--blue);
   }
 }
 .add {
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
-  margin-bottom: var(--xl);
-  padding-bottom: var(--2xl);
+  padding: var(--big) 0 var(--2xl) var(--big);
   border-bottom: 0.5px solid var(--accent_light);
   &__plus,
   &__minus,
   &__amount {
-    font-size: var(--normal);
-    line-height: var(--lh_lg);
-    letter-spacing: var(--ls);
+    text-align: center;
   }
   &__plus,
   &__minus {
     width: calc(var(--large) * 2);
     height: calc(var(--large) * 2);
+    transition: var(--shadow_animation), transform 0.15s ease;
+    @media (hover: hover) {
+      &:hover {
+        box-shadow: var(--box-shadow_hover) var(--shadow_blue);
+      }
+    }
+    &:active {
+      transform: translateY(2px);
+      box-shadow: var(--box-shadow_active) var(--shadow_blue);
+    }
   }
   &__amount {
-    width: calc(var(--2xl) * 2);
+    width: calc(var(--2xl) * 1.7);
+    padding: var(--xs) 0;
+    -webkit-appearance: textfield;
     appearance: textfield;
-    text-align: center;
     &:invalid {
-      outline: 1px solid red;
+      outline: 1px solid var(--error);
     }
   }
   .link {
     flex: 0 0 100%;
-    margin-top: var(--xs);
+    margin-top: var(--normal);
   }
   @media (max-width: 950px) {
     flex-wrap: wrap;
@@ -330,24 +375,27 @@ function addTo(where) {
 }
 .to-cart,
 .to-fav {
-  font-size: var(--normal);
-  line-height: var(--lh_bg);
   letter-spacing: var(--ls);
   color: var(--bg);
   background-color: var(--text);
-  font-weight: 400;
   text-align: center;
-  transition: box-shadow 0.4s ease;
-  &:hover {
-    box-shadow: 1px 4px 8px 0px rgba(51, 51, 51, 0.3);
+  transition: var(--shadow_animation), transform 0.15s ease;
+  @media (hover: hover) {
+    &:not(:disabled):hover {
+      box-shadow: var(--box-shadow_hover) var(--shadow_blue);
+    }
   }
-  &:active {
-    box-shadow: 1px 4px 0px 0px rgba(51, 51, 51, 0.3);
+  &:not(:disabled):active {
+    transform: translateY(2px);
+    box-shadow: var(--box-shadow_active) var(--shadow_blue);
+  }
+  &:disabled {
+    background-color: var(--accent_dark);
   }
 }
 .to-cart {
   margin-left: var(--small);
-  padding: var(--small) var(--xl);
+  padding: var(--small) calc(var(--normal) * 2);
   @media (max-width: 950px) {
     margin-left: 0;
   }
@@ -355,7 +403,7 @@ function addTo(where) {
 .to-fav {
   color: var(--bg);
   padding: var(--normal);
-  margin-left: var(--xs);
+  margin-left: calc(var(--small) / 2);
   img {
     filter: invert(100%);
   }
@@ -364,30 +412,24 @@ function addTo(where) {
 .shipping,
 .payment {
   display: flex;
-  column-gap: var(--xs);
   align-items: center;
-  line-height: var(--large);
+  line-height: var(--lh_lg);
+  @supports (column-gap: 10px) {
+    column-gap: var(--xs);
+  }
+  &::before {
+    content: "";
+    width: var(--big);
+    height: var(--midi);
+  }
 }
 .desc::before {
-  content: "";
-  display: flex;
-  width: var(--midi);
-  height: var(--midi);
   background-image: url("../assets/stack.svg#closes");
 }
 .shipping::before {
-  content: "";
-  display: flex;
-  width: var(--midi);
-  height: var(--midi);
-  background-position: center;
-  background-size: cover;
   background-image: url("../assets/stack.svg#clock");
 }
 .payment::before {
-  content: "";
-  display: flex;
-  width: var(--normal);
   height: var(--xs);
   background-image: url("../assets/stack.svg#pay");
 }
