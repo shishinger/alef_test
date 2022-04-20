@@ -62,6 +62,13 @@ function addTo(where) {
             />
           </div>
           <span class="reviews__amount">14 отзывов</span>
+          <img
+            class="arrow"
+            src="../assets/stack.svg#arrow"
+            width="16"
+            height="16"
+            alt=""
+          />
         </a>
       </div>
       <a href="javascript:void(0)" class="price">
@@ -71,6 +78,13 @@ function addTo(where) {
         <div class="price__old" title="Cтарая цена" aria-label="Cтарая цена">
           1 500 &#8381;
         </div>
+        <img
+          class="arrow"
+          src="../assets/stack.svg#arrow"
+          width="16"
+          height="16"
+          alt=""
+        />
         <div class="sale">
           <div class="sale__item" v-for="sale in sales" :key="sale">
             {{ sale }}
@@ -115,8 +129,8 @@ function addTo(where) {
         <button class="to-fav" @click="addTo('fav')" :disabled="amount < 1">
           <img
             src="../assets/stack.svg#favorite"
-            width="16"
-            height="15"
+            width="17"
+            height="17"
             alt=""
             aria-hidden="true"
             focusable="false"
@@ -157,7 +171,7 @@ function addTo(where) {
     column-gap: var(--normal);
   }
   &__about {
-    padding: var(--xl) var(--big);
+    padding: var(--xl) var(--large);
   }
   &__desc {
     display: flex;
@@ -197,18 +211,13 @@ function addTo(where) {
     position: relative;
     line-height: var(--lh_lg);
     letter-spacing: var(--ls);
-    &::after {
-      content: url("../assets/stack.svg#arrow");
-      position: absolute;
-      width: var(--normal);
-      height: var(--normal);
-      transform: translate(3px, 3px);
-      transition: transform 0.2s ease;
-    }
+  }
+  .arrow {
+    transition: transform 0.2s ease;
   }
   @media (hover: hover) {
-    &:hover &__amount::after {
-      transform: translate(6px, 3px) scale(1.2);
+    &:hover .arrow {
+      transform: translate(50%, 0px) scale(1.2);
     }
   }
   &:active {
@@ -226,7 +235,7 @@ function addTo(where) {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  padding: var(--big);
+  padding: var(--large);
   letter-spacing: var(--ls);
   @supports (column-gap: 14px) {
     column-gap: var(--normal);
@@ -241,18 +250,13 @@ function addTo(where) {
     line-height: var(--lh_lg);
     text-decoration: line-through;
     color: var(--accent_dark);
-    &::after {
-      content: url("../assets/stack.svg#arrow");
-      position: absolute;
-      width: var(--normal);
-      height: var(--normal);
-      transform: translate(100%, 1px);
-      transition: transform 0.2s ease;
-    }
+  }
+  .arrow {
+    transition: transform 0.2s ease;
   }
   @media (hover: hover) {
-    &:hover &__old::after {
-      transform: translate(140%, 1px) scale(1.2);
+    &:hover .arrow {
+      transform: translate(50%, 0px) scale(1.2);
     }
   }
   &:active {
@@ -268,7 +272,7 @@ function addTo(where) {
   }
   &__item {
     width: max-content;
-    padding: calc(var(--xs) / 2) calc(var(--normal) / 2);
+    padding: calc(var(--xs) / 2.5) calc(var(--normal) / 2);
     font-size: var(--small);
     line-height: var(--lh_bg);
     border: 1px solid var(--text);
@@ -279,7 +283,7 @@ function addTo(where) {
   display: flex;
   flex-direction: column;
   row-gap: var(--small);
-  padding: var(--midi) var(--big);
+  padding: var(--small) var(--large);
   &__input {
     position: relative;
     width: 100%;
@@ -298,6 +302,7 @@ function addTo(where) {
       line-height: var(--lh_bg);
       letter-spacing: var(--ls);
       border: 1px solid var(--text);
+      color: var(--text);
     }
     &::after {
       content: "";
@@ -330,12 +335,13 @@ function addTo(where) {
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
-  padding: var(--big) 0 var(--2xl) var(--big);
+  padding: var(--2xl) 0 var(--2xl) var(--xl);
   border-bottom: 0.5px solid var(--accent_light);
   &__plus,
   &__minus,
   &__amount {
     text-align: center;
+    color: var(--text);
   }
   &__plus,
   &__minus {
@@ -363,7 +369,7 @@ function addTo(where) {
   }
   .link {
     flex: 0 0 100%;
-    margin-top: var(--normal);
+    margin-top: var(--xs);
   }
   @media (max-width: 950px) {
     flex-wrap: wrap;
@@ -418,20 +424,19 @@ function addTo(where) {
     column-gap: var(--xs);
   }
   &::before {
-    content: "";
-    width: var(--big);
+    width: var(--midi);
     height: var(--midi);
   }
 }
 .desc::before {
-  background-image: url("../assets/stack.svg#closes");
+  content: url("../assets/stack.svg#closes");
 }
 .shipping::before {
-  background-image: url("../assets/stack.svg#clock");
+  content: url("../assets/stack.svg#clock");
 }
 .payment::before {
   height: var(--xs);
-  background-image: url("../assets/stack.svg#pay");
+  content: url("../assets/stack.svg#pay");
 }
 .more {
   grid-column: span 2;

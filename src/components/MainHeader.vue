@@ -1,11 +1,6 @@
 <script setup>
 import { ref } from "vue";
 
-const headerService = {
-  Аккаунт: "person",
-  Избранное: "favorite",
-  Корзина: "bag",
-};
 const menu = [
   "Постельное белье",
   "Одежда для дома",
@@ -13,30 +8,48 @@ const menu = [
   "Выход",
 ];
 const isOpen = ref(false);
-
-function getImg(img) {
-  return new URL(`../assets/stack.svg#${img}`, import.meta.url).href;
-}
 </script>
 <template>
   <header class="header">
     <p class="logo"><a href="javascript:void(0)">Logo</a></p>
     <ul class="service">
-      <li
-        class="service__item"
-        v-for="(iconId, btnLabel) in headerService"
-        :key="iconId"
-      >
-        <button class="service__btn" :title="btnLabel">
+      <li class="service__item">
+        <button class="service__btn" title="Аккаунт">
           <img
-            :src="getImg(iconId)"
+            src="../assets/stack.svg#person"
             width="16"
             height="16"
             alt=""
             aria-hidden="true"
             focusable="false"
           />
-          <span class="hidden">{{ btnLabel }}</span>
+          <span class="hidden">Аккаунт</span>
+        </button>
+      </li>
+      <li class="service__item">
+        <button class="service__btn" title="Избранное">
+          <img
+            src="../assets/stack.svg#favorite"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+            focusable="false"
+          />
+          <span class="hidden">Избранное</span>
+        </button>
+      </li>
+      <li class="service__item">
+        <button class="service__btn" title="Корзина">
+          <img
+            src="../assets/stack.svg#bag"
+            width="16"
+            height="16"
+            alt=""
+            aria-hidden="true"
+            focusable="false"
+          />
+          <span class="hidden">Корзина</span>
         </button>
       </li>
       <li class="service__item menu">

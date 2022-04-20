@@ -35,6 +35,9 @@ const likes = ref(200);
     @for $i from 1 through 5 {
       &:nth-child(#{$i}) {
         background-image: url("../assets/suggest#{$i}.jpg");
+        @media (min-resolution: 1.5dppx) {
+          background-image: url("../assets/suggest#{$i}-2x.jpg");
+        }
       }
     }
     @media (max-width: 1100px) {
@@ -61,7 +64,9 @@ const likes = ref(200);
     &::after {
       content: "";
       width: 10%;
-      height: 12%;
+      height: 11%;
+      background-size: contain;
+      background-repeat: no-repeat;
     }
     &::before {
       margin-bottom: var(--xs);
@@ -71,7 +76,9 @@ const likes = ref(200);
       content: "";
       position: absolute;
       top: 5%;
-      right: 0;
+      right: 5%;
+      width: 6%;
+      height: 5%;
       background-image: url("../assets/stack.svg#full_screen");
     }
   }
@@ -86,8 +93,10 @@ const likes = ref(200);
     }
     &::before {
       content: "";
-      width: var(--midi);
+      width: var(--normal);
       height: var(--midi);
+      background-size: contain;
+      background-repeat: no-repeat;
       background-image: url("../assets/stack.svg#favorite_full");
     }
   }

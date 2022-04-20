@@ -1,14 +1,25 @@
 <script setup>
 import { ref } from "vue";
 
-const bigImg = ref(new URL("../assets/sleepwear1.jpg", import.meta.url).href);
+const bigImg = ref([
+  new URL("../assets/sleepwear1.jpg", import.meta.url).href,
+  new URL("../assets/sleepwear1-2x.jpg", import.meta.url).href,
+]);
 function getImg(img) {
-  return new URL(`../assets/sleepwear${img}.jpg`, import.meta.url).href;
+  return [
+    new URL(`../assets/sleepwear${img}.jpg`, import.meta.url).href,
+    new URL(`../assets/sleepwear${img}-2x.jpg`, import.meta.url).href,
+  ];
 }
 </script>
 <template>
   <div class="gallery">
-    <img :src="bigImg" class="gallery__main-img" alt="Изображение товара" />
+    <img
+      :src="bigImg[0]"
+      :srcset="bigImg[1] + ' 2x'"
+      class="gallery__main-img"
+      alt="Изображение товара"
+    />
     <ul class="gallery__list">
       <li
         class="gallery__item"

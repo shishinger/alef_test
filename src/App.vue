@@ -77,6 +77,9 @@ html {
   color: var(--text);
   font-family: "Open Sans", sans-serif;
 }
+body {
+  background-color: inherit;
+}
 .main {
   position: relative;
   margin: 66px auto 0;

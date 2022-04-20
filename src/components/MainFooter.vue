@@ -140,8 +140,8 @@ const emailValue = ref("");
 }
 .reset {
   position: absolute;
-  width: var(--normal);
-  height: var(--normal);
+  width: var(--midi);
+  height: var(--midi);
   right: 0;
   top: 50%;
   transform: translate(-80%, 0);
@@ -151,6 +151,9 @@ const emailValue = ref("");
     &:hover {
       filter: brightness(0);
     }
+  }
+  &:focus {
+    filter: brightness(0);
   }
   &:active {
     box-shadow: var(--box-shadow_active) var(--shadow_blue);
@@ -163,6 +166,7 @@ const emailValue = ref("");
   letter-spacing: var(--ls);
   border: 1px solid var(--text);
   margin-left: auto;
+  color: var(--text);
   transition: var(--shadow_animation);
   @media (hover: hover) {
     &:hover {
